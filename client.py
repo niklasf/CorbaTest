@@ -62,6 +62,40 @@ class CarWidget(QWidget):
             self.hovered = None
             self.repaint()
 
+class CarFactoryTableModel(QAbstractTableModel):
+    def __init__(self, factory):
+        super(CarFactoryTableModel, self).__init__()
+        self.factory = factory
+
+    def rowCount(self, parent=QModelIndex()):
+        print "hi"
+        return self.factory.get_car_count()
+
+    def columnCount(self, parent=QModelIndex()):
+        return 1
+
+    def index(self, row, column, parent=QModelIndex()):
+        if parent.isValid():
+            return QModelIndex()
+
+        return self.createIndex(row, column, row)
+
+    def parent(self, index):
+        return QModelIndex()
+
+    def data(self, index, role=Qt.DisplayRole):
+        car = self.factory.get_car(index.row())
+        
+        if role == Qt.DisplayRole:
+            if index.column() == 0:
+                return car.get_uuid()
+
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if orientation == Qt.Horizontal:
+            if role == Qt.DisplayRole:
+                if section == 1:
+                    return "Car ID"
+
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -113,5 +147,10 @@ if __name__ == "__main__":
     connect_dialog.exec_()
     if not connect_dialog.factory:
        sys.exit(0)
+
+    model = CarFactoryTableModel(connect_dialog.factory)
+    view = QTableView()
+    view.setModel(model)
+    view.show()
 
     app.exec_()

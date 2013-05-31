@@ -15,7 +15,7 @@ class CarImpl(CorbaTest__POA.Car):
     def __init__(self):
         self.lock = threading.Lock()
 
-        self.uuid = uuid.uuid4()
+        self.uuid = str(uuid.uuid4())
 
         self.wheels = False
         self.windows = False
@@ -114,14 +114,14 @@ class CarImpl(CorbaTest__POA.Car):
         self.lock.release()
         return True
 
-    def get_uuid():
+    def get_uuid(self):
         return self.uuid
 
 class CarFactoryImpl(CorbaTest__POA.CarFactory):
     def __init__(self):
         self.cars = []
 
-    def add_car(self, index):
+    def add_car(self):
         car = CarImpl()
         self.cars.append(car)
         return car._this()
@@ -142,4 +142,8 @@ if __name__ == "__main__":
     print orb.object_to_string(servant._this())
 
     poa._get_the_POAManager().activate()
+
+    servant.add_car()
+    servant.add_car()
+
     orb.run()
