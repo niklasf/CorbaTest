@@ -143,7 +143,4 @@ if __name__ == "__main__":
 
     poa._get_the_POAManager().activate()
 
-    servant.add_car()
-    servant.add_car()
-
     orb.run()
