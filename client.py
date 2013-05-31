@@ -11,6 +11,7 @@ class CarWidget(QWidget):
     def __init__(self, car):
         super(CarWidget, self).__init__()
         self.setMouseTracking(True)
+        self.setFixedSize(QSize(CarWidget.WIDTH, CarWidget.HEIGHT))
 
         self.car = car
 
@@ -24,6 +25,9 @@ class CarWidget(QWidget):
             "lights": QImage("layer-lights.png"),
             "doors": QImage("layer-doors.png"),
             "steering-wheel": QImage("layer-steering-wheel.png"),
+            "brakes": QImage("layer-brakes.png"),
+            "engine": QImage("layer-engine.png"),
+            "color": QImage("layer-color.png"),
         };
 
     def paintEvent(self, event):
