@@ -186,6 +186,16 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("CORBA: Car list")
 
+        self.reloadAction = QAction("Reload", self)
+        self.reloadAction.setShortcut("F5")
+        self.reloadAction.triggered.connect(self.onReload)
+
+        menu = self.menuBar().addMenu("Car list")
+        menu.addAction(self.reloadAction)
+
+    def onReload(self):
+        self.model.reset()
+
     def sizeHint(self):
         return QSize(600, 400)
 
