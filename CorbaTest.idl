@@ -1,0 +1,31 @@
+module CorbaTest {
+
+    interface Car {
+        boolean has_wheels();
+        boolean has_windows();
+        boolean has_doors();
+        boolean has_engine();
+        boolean has_brakes();
+        boolean has_lights();
+        boolean has_steering_wheel();
+        boolean has_color();
+
+        void add_wheels();
+        void add_windows();
+        void add_doors();
+        void add_engine();
+        void add_brakes();
+        void add_lights();
+        void add_steering_wheel();
+        void add_color();
+
+        string get_uuid();
+    };
+
+    interface CarFactory {
+        Car add_car();
+        Car get_car(in long index);
+        long get_car_count();
+    };
+
+};
