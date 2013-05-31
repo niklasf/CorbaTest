@@ -17,3 +17,7 @@ Running
 - Starting the server: `python server.py` prints the IOR string.
 - Starting a client: `python client.py`
 - Adding a new car: `./creator-client IOR:...`
+
+Blueprint source
+----------------
+http://bibikalki.narod.ru/italjanskij/subaru/Subaru-Forester-2003/
