@@ -5,6 +5,10 @@ from PySide.QtGui import *
 
 import sys
 
+import CORBA
+
+import CorbaTest
+
 class CarWidget(QWidget):
     WIDTH = 600
     HEIGHT = 226
@@ -68,10 +72,46 @@ class MainWindow(QWidget):
         label.setPixmap(QPixmap("background.png"))
         layout.addWidget(label)
 
+class ConnectDialog(QDialog):
+    def __init__(self, orb):
+        super(ConnectDialog, self).__init__()
+
+        self.orb = orb
+        self.factory = None
+
+        layout = QVBoxLayout(self)
+
+        layout.addWidget(QLabel("IOR string:"))
+
+        self.object_string_box = QLineEdit()
+        layout.addWidget(self.object_string_box)
+
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttons.accepted.connect(self.onAccepted)
+        layout.addWidget(buttons)
+
+        self.setWindowTitle("CORBA: Connection to car factory")
+
+    def sizeHint(self):
+        return QSize(600, 80)
+
+    def onAccepted(self):
+        try:
+            obj = self.orb.string_to_object(self.object_string_box.text())
+            self.factory = obj._narrow(CorbaTest.CarFactory)
+            self.accept()
+        except Exception, e:
+            QMessageBox.critical(self, self.windowTitle(), str(e))
+
+
 if __name__ == "__main__":
+    orb = CORBA.ORB_init()
+
     app = QApplication(sys.argv)
-    #main_window = MainWindow()
-    #main_window.show()
-    car_widget = CarWidget(None)
-    car_widget.show()
+
+    connect_dialog = ConnectDialog(orb)
+    connect_dialog.exec_()
+    if not connect_dialog.factory:
+       sys.exit(0)
+
     app.exec_()
