@@ -68,7 +68,6 @@ class CarFactoryTableModel(QAbstractTableModel):
         self.factory = factory
 
     def rowCount(self, parent=QModelIndex()):
-        print "hi"
         return self.factory.get_car_count()
 
     def columnCount(self, parent=QModelIndex()):
@@ -93,18 +92,35 @@ class CarFactoryTableModel(QAbstractTableModel):
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if orientation == Qt.Horizontal:
             if role == Qt.DisplayRole:
-                if section == 1:
+                if section == 0:
                     return "Car ID"
 
-class MainWindow(QWidget):
-    def __init__(self):
+class MainWindow(QMainWindow):
+    def __init__(self, factory):
         super(MainWindow, self).__init__()
 
-        layout = QHBoxLayout(self)
+        self.windows = { }
 
-        label = QLabel(self)
-        label.setPixmap(QPixmap("background.png"))
-        layout.addWidget(label)
+        self.factory = factory
+        self.model = CarFactoryTableModel(factory)
+
+        self.view = QTableView()
+        self.view.setModel(self.model)
+        self.view.resizeColumnsToContents()
+        self.view.doubleClicked.connect(self.onDoubleClicked)
+        self.setCentralWidget(self.view)
+
+        self.setWindowTitle("CORBA: Car list")
+
+    def sizeHint(self):
+        return QSize(600, 400)
+
+    def onDoubleClicked(self, index):
+        if not index.row() in self.windows or not self.windows[index.row()].isVisible():
+            car = self.factory.get_car(index.row())
+            self.windows[index.row()] = CarWidget(car)
+        self.windows[index.row()].show()
+        self.windows[index.row()].activateWindow()
 
 class ConnectDialog(QDialog):
     def __init__(self, orb):
@@ -148,9 +164,7 @@ if __name__ == "__main__":
     if not connect_dialog.factory:
        sys.exit(0)
 
-    model = CarFactoryTableModel(connect_dialog.factory)
-    view = QTableView()
-    view.setModel(model)
-    view.show()
+    main_window = MainWindow(connect_dialog.factory)
+    main_window.show()
 
     app.exec_()
