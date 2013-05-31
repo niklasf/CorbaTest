@@ -168,6 +168,9 @@ class CarFactoryTableModel(QAbstractTableModel):
             if role == Qt.DisplayRole:
                 if section == 0:
                     return "Car ID"
+        else:
+            if role == Qt.DisplayRole:
+                return section + 1
 
 class MainWindow(QMainWindow):
     def __init__(self, factory):
