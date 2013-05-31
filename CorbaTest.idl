@@ -10,14 +10,14 @@ module CorbaTest {
         boolean has_steering_wheel();
         boolean has_color();
 
-        void add_wheels();
-        void add_windows();
-        void add_doors();
-        void add_engine();
-        void add_brakes();
-        void add_lights();
-        void add_steering_wheel();
-        void add_color();
+        boolean add_wheels();
+        boolean add_windows();
+        boolean add_doors();
+        boolean add_engine();
+        boolean add_brakes();
+        boolean add_lights();
+        boolean add_steering_wheel();
+        boolean add_color();
 
         string get_uuid();
     };

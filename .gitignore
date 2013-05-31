@@ -1,3 +1,4 @@
 CorbaTest/
 CorbaTest__POA/
 CorbaTest_idl.py
+*.pyc
