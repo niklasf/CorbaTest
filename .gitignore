@@ -1,5 +1,10 @@
 CorbaTest/
 CorbaTest__POA/
 CorbaTest_idl.py
+CorbaTest.hh
+CorbaTestSK.cc
+CorbaTestSK.o
+creator-client
+creator-client.o
 *.pyc
 *.swp
