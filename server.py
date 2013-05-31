@@ -51,7 +51,7 @@ class CarImpl(CorbaTest__POA.Car):
         return self.color
 
     def add_wheels(self):
-        if not self.lock.acquire(False):
+        if not self.lock.acquire(False) or self.wheels:
             return False
         time.sleep(5)
         self.wheels = True
@@ -59,7 +59,7 @@ class CarImpl(CorbaTest__POA.Car):
         return True
 
     def add_windows(self):
-        if not self.lock.acquire(False):
+        if not self.lock.acquire(False) or self.windows:
             return False
         time.sleep(5)
         self.windows = True
@@ -67,7 +67,7 @@ class CarImpl(CorbaTest__POA.Car):
         return True
 
     def add_doors(self):
-        if not self.lock.acquire(False):
+        if not self.lock.acquire(False) or self.doors:
             return False
         time.sleep(5)
         self.doors = True
@@ -75,7 +75,7 @@ class CarImpl(CorbaTest__POA.Car):
         return True
 
     def add_engine(self):
-        if not self.lock.acquire(False):
+        if not self.lock.acquire(False) or self.engine:
             return False
         time.sleep(10)
         self.engine = True
@@ -83,7 +83,7 @@ class CarImpl(CorbaTest__POA.Car):
         return True
 
     def add_brakes(self):
-        if not self.lock.acquire(False):
+        if not self.lock.acquire(False) or self.brakes:
             return False
         time.sleep(8)
         self.brakes = True
@@ -91,7 +91,7 @@ class CarImpl(CorbaTest__POA.Car):
         return True
 
     def add_lights(self):
-        if not self.lock.acquire(False):
+        if not self.lock.acquire(False) or self.lights:
             return False
         time.sleep(3)
         self.lights = True
@@ -99,7 +99,7 @@ class CarImpl(CorbaTest__POA.Car):
         return True
 
     def add_steering_wheel(self):
-        if not self.lock.acquire(False):
+        if not self.lock.acquire(False) or self.steering_wheel:
             return False
         time.sleep(5)
         self.steering_wheel = True
@@ -107,7 +107,7 @@ class CarImpl(CorbaTest__POA.Car):
         return True
 
     def add_color(self):
-        if not self.lock.acquire(False):
+        if not self.lock.acquire(False) or self.color:
              return False
         time.sleep(1)
         self.color = True
