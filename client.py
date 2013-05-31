@@ -12,6 +12,7 @@ import CorbaTest
 class CarWidget(QWidget):
     WIDTH = 600
     HEIGHT = 226
+
     def __init__(self, car):
         super(CarWidget, self).__init__()
         self.setMouseTracking(True)
@@ -20,6 +21,7 @@ class CarWidget(QWidget):
         self.car = car
 
         self.active = []
+        self.onUpdate()
         self.hovered = None
 
         self.background = QImage("background.png")
@@ -33,6 +35,8 @@ class CarWidget(QWidget):
             "engine": QImage("layer-engine.png"),
             "color": QImage("layer-color.png"),
         };
+
+        self.setWindowTitle("CORBA: Car " + self.car.get_uuid())
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -61,6 +65,58 @@ class CarWidget(QWidget):
         if self.hovered:
             self.hovered = None
             self.repaint()
+
+    def mouseReleaseEvent(self, event):
+        if event.x() >= 0 and event.y() >= 0 and event.x() < CarWidget.WIDTH and event.y() < CarWidget.HEIGHT:
+            for layer in self.layers:
+                if self.layers[layer].pixel(event.x(), event.y()):
+                    if layer in self.active:
+                        QMessageBox.warning(self, self.windowTitle(), "Already done.")
+                        return
+
+                    ret = False
+
+                    if layer == "color":
+                        ret = self.car.add_color()
+                    elif layer == "engine":
+                        ret = self.car.add_engine()
+                    elif layer == "wheels":
+                        ret = self.car.add_wheels()
+                    elif layer == "windows":
+                        ret = self.car.add_windows()
+                    elif layer == "doors":
+                        ret = self.car.add_doors()
+                    elif layer == "steering-wheel":
+                        ret = self.car.add_steering_wheel()
+                    elif layer == "brakes":
+                        ret = self.car.add_brakes()
+                    elif layer == "lights":
+                        ret = self.car.add_lights()
+
+                    if not ret:
+                        QMessageBox.warning(self, self.windowTitle(), "Car is locked.")
+                    else:
+                        self.onUpdate()
+                        self.repaint()
+
+    def onUpdate(self):
+        self.active = []
+        if self.car.has_wheels():
+            self.active.append("wheels")
+        if self.car.has_windows():
+            self.active.append("windows")
+        if self.car.has_doors():
+            self.active.append("doors")
+        if self.car.has_engine():
+            self.active.append("engine")
+        if self.car.has_brakes():
+            self.active.append("brakes")
+        if self.car.has_lights():
+            self.active.append("lights")
+        if self.car.has_steering_wheel():
+            self.active.append("steering-wheel")
+        if self.car.has_color():
+            self.active.append("color")
 
 class CarFactoryTableModel(QAbstractTableModel):
     def __init__(self, factory):
