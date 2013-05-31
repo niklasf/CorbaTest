@@ -31,6 +31,10 @@ class CarWidget(QWidget):
         self.onUpdate()
         self.hovered = None
 
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.onUpdate)
+        self.timer.start(250)
+
         self.background = QImage("background.png")
         self.layers = {
             "wheels": QImage("layer-wheels.png"),
@@ -111,7 +115,6 @@ class CarWidget(QWidget):
             self.doShowLock.emit()
         else:
             self.onUpdate()
-            self.doRepaint.emit()
 
     def onUpdate(self):
         self.active = []
@@ -131,6 +134,7 @@ class CarWidget(QWidget):
             self.active.append("steering-wheel")
         if self.car.has_color():
             self.active.append("color")
+        self.doRepaint.emit()
 
 class CarFactoryTableModel(QAbstractTableModel):
     def __init__(self, factory):
