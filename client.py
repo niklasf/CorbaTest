@@ -4,6 +4,7 @@ from PySide.QtCore import *
 from PySide.QtGui import *
 
 import sys
+import threading
 
 import CORBA
 
@@ -13,10 +14,16 @@ class CarWidget(QWidget):
     WIDTH = 600
     HEIGHT = 226
 
+    doRepaint = Signal()
+    doShowLock = Signal()
+
     def __init__(self, car):
         super(CarWidget, self).__init__()
         self.setMouseTracking(True)
         self.setFixedSize(QSize(CarWidget.WIDTH, CarWidget.HEIGHT))
+
+        self.doRepaint.connect(self.repaint)
+        self.doShowLock.connect(self.onShowLock)
 
         self.car = car
 
@@ -74,30 +81,37 @@ class CarWidget(QWidget):
                         QMessageBox.warning(self, self.windowTitle(), "Already done.")
                         return
 
-                    ret = False
+                    thread = threading.Thread(target=self.doLayer, args=[layer])
+                    thread.start()
 
-                    if layer == "color":
-                        ret = self.car.add_color()
-                    elif layer == "engine":
-                        ret = self.car.add_engine()
-                    elif layer == "wheels":
-                        ret = self.car.add_wheels()
-                    elif layer == "windows":
-                        ret = self.car.add_windows()
-                    elif layer == "doors":
-                        ret = self.car.add_doors()
-                    elif layer == "steering-wheel":
-                        ret = self.car.add_steering_wheel()
-                    elif layer == "brakes":
-                        ret = self.car.add_brakes()
-                    elif layer == "lights":
-                        ret = self.car.add_lights()
+    def onShowLock(self):
+        QMessageBox.warning(self, self.windowTitle(), "Car is locked.")
 
-                    if not ret:
-                        QMessageBox.warning(self, self.windowTitle(), "Car is locked.")
-                    else:
-                        self.onUpdate()
-                        self.repaint()
+    def doLayer(self, layer):
+        ret = False
+
+        if layer == "color":
+            ret = self.car.add_color()
+        elif layer == "engine":
+            ret = self.car.add_engine()
+        elif layer == "wheels":
+            ret = self.car.add_wheels()
+        elif layer == "windows":
+            ret = self.car.add_windows()
+        elif layer == "doors":
+            ret = self.car.add_doors()
+        elif layer == "steering-wheel":
+            ret = self.car.add_steering_wheel()
+        elif layer == "brakes":
+            ret = self.car.add_brakes()
+        elif layer == "lights":
+            ret = self.car.add_lights()
+
+        if not ret:
+            self.doShowLock.emit()
+        else:
+            self.onUpdate()
+            self.doRepaint.emit()
 
     def onUpdate(self):
         self.active = []
