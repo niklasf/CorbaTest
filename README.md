@@ -8,7 +8,7 @@ Homework for learning CORBA as desribed in `exercise.pdf`.
 Build
 -----
 ```
-sudo apt-get install omniorb omniorb-python omniorb-idl libomniorb4-dev libomnithread3-dev
+sudo apt-get install omniorb libomniorb4-dev omniidl omniidl-python
 make
 ```
 
